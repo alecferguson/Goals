@@ -13,6 +13,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 //Goals route
 app.use('/api/goals', require('./routes/goalRoutes')) //References goalRoutes
+app.use('/api/users', require('./routes/userRoutes')) //References userRoutes
 //Using custom error handler
 app.use(errorHandler)
 //Listening to port
