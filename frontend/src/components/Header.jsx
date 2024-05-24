@@ -4,7 +4,7 @@ function Header() {
     return (
         <header className = 'header'>
             <div className = "logo">
-                <Link to='/'>GoalSetter</Link>
+                <Link to='/'><b>Goal Setter</b></Link>
             </div>
             <ul>
                 <li>
@@ -21,6 +21,4 @@ function Header() {
         </header>
     )
 }
-/*
-*/
 export default Header
