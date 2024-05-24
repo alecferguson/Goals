@@ -4,14 +4,14 @@ const {getGoals, setGoal, updateGoal, deleteGoal} = require('../controllers/goal
 //Cleaning up routes since get and post use the same (optional)
 //router.route('/'.get(getGoals).post(setGoal))
 //router.route('/:id'.delete(getGoals).put(setGoal))
-
+const { protect } = require('../middleware/authMiddleware')
 //Routes
-router.get('/', getGoals)
+router.get('/', protect, getGoals)
 
-router.post('/', setGoal)
+router.post('/', protect, setGoal)
 
-router.put('/:id',updateGoal)
+router.put('/:id', protect, updateGoal)
 
-router.delete('/:id', deleteGoal)
+router.delete('/:id', protect, deleteGoal)
 
 module.exports = router

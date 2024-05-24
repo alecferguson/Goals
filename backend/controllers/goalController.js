@@ -1,12 +1,13 @@
 const asyncHandler = require('express-async-handler')
 
 const Goal = require('../models/goalModel') //Loading in mongoose model
+const User = require('../models/userModel')
 //Using async for mongoose
 // @desc Get a specific user goal
 // @route GET /api/goals
 // @access Private
 const getGoals = asyncHandler (async (req, res) => {
-    const goals = await Goal.find() //Finding from goal object
+    const goals = await Goal.find({user: req.user.id}) //Finding from goal object
     res.status(200).json(goals)
 })
 // @desc Set a specific user goal
@@ -22,6 +23,7 @@ const setGoal = asyncHandler(async (req, res) => {
     }
     const goal = await Goal.create( {
         text: req.body.text,
+        user: req.user.id
     })
     res.status(200).json(goal)
     //Debug
@@ -36,6 +38,19 @@ const updateGoal = asyncHandler (async (req, res) => {
         res.status(400)
         throw new Error('Goal not found')
     }
+    //Beinning checking for user logic
+    const user = await User.findById(req.user.id)
+    //Checking for user
+    if(!user) {
+        res.status(400)
+        throw new Error('User not Found!')
+    }
+    //Making sure logged in user matches the goal user
+    if(goal.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
+    }
+    //Ending check for user logic
     const updatedGoal = await Goal.findByIdAndUpdate(req.params.id,req.body, {new: true,})
     res.status(200).json(updatedGoal)
 })
@@ -49,6 +64,19 @@ const deleteGoal = asyncHandler( async (req, res) => {
         res.status(400)
         throw new Error('Goal not found')
     }
+    //Beinning checking for user logic
+    const user = await User.findById(req.user.id)
+    //Checking for user
+    if(!user) {
+        res.status(400)
+        throw new Error('User not Found!')
+    }
+    //Making sure logged in user matches the goal user
+    if(goal.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
+    }
+    //Ending check for user logic
     //Removing goal
     await goal.deleteOne()
 
